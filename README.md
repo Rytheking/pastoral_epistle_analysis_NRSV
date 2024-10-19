@@ -9,6 +9,6 @@ source venv/bin/activate  # (or venv\Scripts\activate on Windows)
 
 Install needed dependencies
 ```shell
-pip install nltk matplotlib textstat
-python -m nltk.downloader punkt
+pip install nltk matplotlib textstat matplotlib-venn pandas seaborn
+python -m nltk.downloader punkt, stopwords
 ```

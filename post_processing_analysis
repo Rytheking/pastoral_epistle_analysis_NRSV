@@ -1,0 +1,123 @@
+
+import os
+import ast
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from collections import Counter
+
+# Load the data
+df = pd.read_csv('epistle_analysis.csv')
+
+# Convert the 'top_10_words' column from string to list of tuples
+df['top_10_words'] = df['top_10_words'].apply(ast.literal_eval)
+
+# Separate the dataframe into undisputed and pastoral epistles
+df_undisputed = df[df['label'] == 'Undisputed']
+df_pastoral = df[df['label'] == 'Pastoral']
+
+# Analysis 1: Boxplot for Average Sentence Length Comparison
+plt.figure(figsize=(10, 6))
+sns.boxplot(data=df, x='label', y='avg_sentence_length')
+plt.title('Average Sentence Length Comparison Between Undisputed and Pastoral Epistles')
+plt.xlabel('Epistle Type')
+plt.ylabel('Average Sentence Length (words)')
+plt.savefig(f"{'Average Sentence Length Comparison Between Undisputed and Pastoral Epistles'.replace(' ', '_')}.png")
+
+# Flatten the top 10 words from undisputed and pastoral epistles into dictionaries
+undisputed_word_freq = Counter()
+pastoral_word_freq = Counter()
+
+for words in df_undisputed['top_10_words']:
+    undisputed_word_freq.update(dict(words))
+
+for words in df_pastoral['top_10_words']:
+    pastoral_word_freq.update(dict(words))
+
+# Normalize word frequencies due to differences in total word count between the two sets
+total_undisputed_word_count = df_undisputed['word_count'].sum()
+total_pastoral_word_count = df_pastoral['word_count'].sum()
+
+normalized_undisputed_word_freq = {word: count / total_undisputed_word_count for word, count in undisputed_word_freq.items()}
+normalized_pastoral_word_freq = {word: count / total_pastoral_word_count for word, count in pastoral_word_freq.items()}
+
+# Get the most common words across both sets (shared and unique)
+all_common_words = set(normalized_undisputed_word_freq.keys()).union(set(normalized_pastoral_word_freq.keys()))
+word_data = {
+    'word': [],
+    'undisputed_freq': [],
+    'pastoral_freq': []
+}
+
+for word in all_common_words:
+    word_data['word'].append(word)
+    word_data['undisputed_freq'].append(normalized_undisputed_word_freq.get(word, 0))
+    word_data['pastoral_freq'].append(normalized_pastoral_word_freq.get(word, 0))
+
+df_word_freq = pd.DataFrame(word_data)
+
+# Bar chart to compare normalized top words between Undisputed and Pastoral Epistles
+df_word_freq = df_word_freq.sort_values(by='undisputed_freq', ascending=False).head(15)  # Top 15 shared words
+plt.figure(figsize=(12, 7))
+df_word_freq.plot(x='word', y=['undisputed_freq', 'pastoral_freq'], kind='bar', figsize=(12, 7), color=['blue', 'orange'])
+plt.title('Top 15 Shared Words (Normalized) - Frequency in Undisputed vs. Pastoral Epistles')
+plt.xlabel('Words')
+plt.ylabel('Normalized Frequency')
+plt.xticks(rotation=45)
+plt.savefig(f"{'Top 15 Shared Words (Normalized) - Frequency in Undisputed vs. Pastoral Epistles'.replace(' ', '_')}.png")
+
+
+# Analysis 3: Unique and Shared Words
+unique_to_pastoral = set(normalized_pastoral_word_freq.keys()) - set(normalized_undisputed_word_freq.keys())
+unique_to_undisputed = set(normalized_undisputed_word_freq.keys()) - set(normalized_pastoral_word_freq.keys())
+shared_words = set(normalized_undisputed_word_freq.keys()) & set(normalized_pastoral_word_freq.keys())
+
+# Print the counts
+print(f"Unique to Pastoral Epistles: {len(unique_to_pastoral)}")
+print(f"Unique to Undisputed Epistles: {len(unique_to_undisputed)}")
+print(f"Shared Words: {len(shared_words)}")
+
+# Heatmap for Word Frequency Correlation Between Undisputed and Pastoral Epistles
+plt.figure(figsize=(10, 8))
+corr = df_word_freq[['undisputed_freq', 'pastoral_freq']].corr()
+sns.heatmap(corr, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+plt.title('Word Frequency Correlation (Normalized): Undisputed vs. Pastoral Epistles')
+plt.savefig(f"{'Word Frequency Correlation (Normalized): Undisputed vs. Pastoral Epistles'.replace(' ', '_')}.png")
+
+# Additional Analysis: Word Frequency Correlation Between All Epistles (Books)
+# Initialize a dictionary to store word frequencies for each epistle
+epistle_word_freq = {}
+
+# Process each epistle to calculate word frequencies
+for index, row in df.iterrows():
+    epistle = row['epistle']
+    word_count = row['word_count']
+    
+    # Extract top 10 words and their counts
+    word_freq = Counter(dict(row['top_10_words']))
+    
+    # Normalize word frequencies
+    normalized_word_freq = {word: count / word_count for word, count in word_freq.items()}
+    
+    # Store in the dictionary
+    epistle_word_freq[epistle] = normalized_word_freq
+
+# Create a DataFrame where each column represents an epistle and each row a word
+# First, find all unique words across all epistles
+all_words = set(word for word_freq in epistle_word_freq.values() for word in word_freq.keys())
+
+# Convert set to list for DataFrame index
+word_freq_df = pd.DataFrame(index=list(all_words))
+
+# Populate the DataFrame with normalized word frequencies for each epistle
+for epistle, word_freq in epistle_word_freq.items():
+    word_freq_df[epistle] = word_freq_df.index.map(word_freq).fillna(0)
+
+# Compute the correlation matrix between the epistles based on word frequencies
+correlation_matrix = word_freq_df.corr()
+
+# Save the correlation matrix heatmap
+plt.figure(figsize=(12, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+plt.title('Word Frequency Correlation Between Epistles (Books)')
+plt.savefig(f"{'Word Frequency Correlation Between Epistles (Books)'.replace(' ', '_')}.png")

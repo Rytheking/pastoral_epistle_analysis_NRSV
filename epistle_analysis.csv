@@ -1,0 +1,11 @@
+epistle,label,word_count,avg_sentence_length,top_10_words
+philemon,Undisputed,235,41.23076923076923,"[('thee', 15), ('christ', 8), ('thy', 7), ('jesus', 6), ('lord', 5), ('thou', 5), ('unto', 5), ('brother', 4), ('paul', 3), ('love', 3)]"
+philippians,Undisputed,1081,41.640625,"[('christ', 37), ('things', 30), ('ye', 27), ('god', 24), ('jesus', 22), ('unto', 18), ('also', 17), ('lord', 15), ('may', 15), ('shall', 13)]"
+2nd_corinthians,Undisputed,2898,34.148148148148145,"[('god', 74), ('ye', 66), ('unto', 61), ('christ', 47), ('us', 46), ('also', 46), ('glory', 37), ('lord', 29), ('may', 26), ('made', 25)]"
+1st_corinthians,Undisputed,4559,25.66216216216216,"[('ye', 125), ('god', 106), ('things', 78), ('man', 73), ('unto', 68), ('lord', 68), ('christ', 64), ('shall', 64), ('one', 61), ('let', 51)]"
+galatians,Undisputed,1525,27.955555555555556,"[('ye', 43), ('christ', 38), ('god', 32), ('law', 32), ('unto', 30), ('faith', 22), ('one', 19), ('flesh', 18), ('spirit', 18), ('jesus', 17)]"
+romans,Undisputed,4695,28.545,"[('god', 169), ('unto', 105), ('shall', 81), ('law', 77), ('christ', 67), ('also', 60), ('thou', 56), ('ye', 51), ('lord', 46), ('one', 45)]"
+1st_thessalonians,Undisputed,931,40.30909090909091,"[('ye', 37), ('god', 36), ('lord', 24), ('unto', 20), ('us', 20), ('brethren', 18), ('even', 18), ('jesus', 16), ('also', 13), ('know', 13)]"
+1st_timothy,Pastoral,1249,36.0,"[('god', 22), ('good', 21), ('faith', 18), ('christ', 15), ('men', 15), ('things', 15), ('jesus', 14), ('thou', 13), ('let', 13), ('unto', 12)]"
+titus,Pastoral,514,42.73076923076923,"[('god', 13), ('things', 10), ('good', 10), ('men', 8), ('unto', 7), ('us', 7), ('according', 6), ('saviour', 6), ('may', 6), ('works', 6)]"
+2nd_timothy,Pastoral,883,29.402985074626866,"[('unto', 18), ('lord', 17), ('also', 15), ('thou', 15), ('god', 14), ('shall', 14), ('christ', 13), ('jesus', 13), ('thee', 12), ('things', 9)]"
