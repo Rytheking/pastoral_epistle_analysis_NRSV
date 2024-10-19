@@ -3,6 +3,7 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 import string
 from collections import Counter
+import matplotlib.pyplot as plt
 # Punkt is a sentence tokenizer that has been trained on english enough to handle ambiguity
 # like Dr. vs a . at the end of a sentence
 nltk.download('punkt_tab')  # Download necessary resources
@@ -35,7 +36,6 @@ def preprocess_text(text):
 
     return words, sentences
 
-from collections import Counter
 
 def word_frequency_analysis(words):
     """
@@ -45,8 +45,26 @@ def word_frequency_analysis(words):
     """
     return Counter(words)
 
+
+def plot_word_frequency(word_freq, title):
+    """
+    Plot a bar chart of the most common words.
+    :param word_freq: Counter object with word frequencies.
+    :param title: Title of the plot.
+    """
+    words, counts = zip(*word_freq.most_common(10))  # Top 10 words
+    plt.figure(figsize=(10, 6))
+    plt.bar(words, counts)
+    plt.title(title)
+    plt.xticks(rotation=45)
+    
+    # Save the plot to a file
+    plt.savefig(f"{title.replace(' ', '_')}.png")
+    print(f"Plot saved as {title.replace(' ', '_')}.png")
+
 text = load_text('./texts/undisputed/romans.txt')
 words, sentences = preprocess_text(text)
 word_freq = word_frequency_analysis(words)
-print(word_freq.most_common(10))  # Top 10 most frequent words
+plot_word_frequency(word_freq, "Top 10 Words in Romans")
+
 
