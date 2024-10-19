@@ -1,8 +1,12 @@
 import nltk
 from nltk.tokenize import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+import string
+from collections import Counter
 # Punkt is a sentence tokenizer that has been trained on english enough to handle ambiguity
 # like Dr. vs a . at the end of a sentence
 nltk.download('punkt_tab')  # Download necessary resources
+nltk.download('stopwords')
 
 def load_text(file_path):
     """
@@ -24,6 +28,11 @@ def preprocess_text(text):
     """
     words = word_tokenize(text)
     sentences = sent_tokenize(text)
+    stop_words = set(stopwords.words('english'))
+
+    # Filter out stop words and punctuation
+    words = [word.lower() for word in words if word.lower() not in stop_words and word not in string.punctuation]
+
     return words, sentences
 
 from collections import Counter
