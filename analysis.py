@@ -4,6 +4,8 @@ from nltk.corpus import stopwords
 import string
 from collections import Counter
 import matplotlib.pyplot as plt
+import textstat
+
 # Punkt is a sentence tokenizer that has been trained on english enough to handle ambiguity
 # like Dr. vs a . at the end of a sentence
 nltk.download('punkt_tab')  # Download necessary resources
@@ -73,12 +75,20 @@ def sentence_length_analysis(sentences):
     return avg_sentence_length
 
 
+def readability_analysis(text):
+    flesch_score = textstat.flesch_reading_ease(text)
+    gunning_fog = textstat.gunning_fog(text)
+    return flesch_score, gunning_fog
+
+
 text = load_text('./texts/undisputed/romans.txt')
 words, sentences = preprocess_text(text)
 word_freq = word_frequency_analysis(words)
 plot_word_frequency(word_freq, "Top 10 Words in Romans")
 avg_length = sentence_length_analysis(sentences)
 print(f"Average sentence length: {avg_length}")
+fScore, gScore = readability_analysis(text=text)
+print(fScore, gScore)
 
 
 
