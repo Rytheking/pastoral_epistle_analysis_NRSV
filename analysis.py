@@ -57,14 +57,28 @@ def plot_word_frequency(word_freq, title):
     plt.bar(words, counts)
     plt.title(title)
     plt.xticks(rotation=45)
-    
+
     # Save the plot to a file
     plt.savefig(f"{title.replace(' ', '_')}.png")
     print(f"Plot saved as {title.replace(' ', '_')}.png")
+
+def sentence_length_analysis(sentences):
+    """
+    Calculate average sentence length.
+    :param sentences: List of sentences.
+    :return: Average sentence length in words.
+    """
+    sentence_lengths = [len(word_tokenize(sentence)) for sentence in sentences]
+    avg_sentence_length = sum(sentence_lengths) / len(sentence_lengths)
+    return avg_sentence_length
+
 
 text = load_text('./texts/undisputed/romans.txt')
 words, sentences = preprocess_text(text)
 word_freq = word_frequency_analysis(words)
 plot_word_frequency(word_freq, "Top 10 Words in Romans")
+avg_length = sentence_length_analysis(sentences)
+print(f"Average sentence length: {avg_length}")
+
 
 
