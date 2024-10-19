@@ -1,5 +1,7 @@
 import nltk
 from nltk.tokenize import word_tokenize, sent_tokenize
+# Punkt is a sentence tokenizer that has been trained on english enough to handle ambiguity
+# like Dr. vs a . at the end of a sentence
 nltk.download('punkt_tab')  # Download necessary resources
 
 def load_text(file_path):
@@ -11,8 +13,7 @@ def load_text(file_path):
     with open(file_path, 'r') as file:
         return file.read()
 
-# Punkt is a sentence tokenizer that has been trained on english enough to handle ambiguity
-# like Dr. vs a . at the end of a sentence
+
 
 
 def preprocess_text(text):
@@ -25,7 +26,18 @@ def preprocess_text(text):
     sentences = sent_tokenize(text)
     return words, sentences
 
+from collections import Counter
+
+def word_frequency_analysis(words):
+    """
+    Count the frequency of each word in the text.
+    :param words: List of words.
+    :return: Counter object with word frequencies.
+    """
+    return Counter(words)
+
 text = load_text('./texts/undisputed/romans.txt')
 words, sentences = preprocess_text(text)
-print(words)  # List of words
-print(sentences)  # List of sentences
+word_freq = word_frequency_analysis(words)
+print(word_freq.most_common(10))  # Top 10 most frequent words
+
