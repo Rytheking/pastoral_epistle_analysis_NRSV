@@ -10,4 +10,5 @@ source venv/bin/activate  # (or venv\Scripts\activate on Windows)
 Install needed dependencies
 ```shell
 pip install nltk matplotlib textstat
+python -m nltk.downloader punkt
 ```
